@@ -29,9 +29,9 @@ export const PageRoutes = [
     icon: <MdMessage size={24} />,
   },
   {
-    path: "/accounts",
+    path: "/users",
     title: "Accounts",
-    element: lazy(() => import("./pages/DonationPage")),
+    element: lazy(() => import("./pages/UsersPage")),
     icon: <FaUsers size={24} />,
   },
   {
