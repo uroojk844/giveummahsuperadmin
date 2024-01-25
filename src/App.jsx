@@ -10,9 +10,9 @@ const DonationPage = lazy(() => import("./pages/DonationPage"));
 const App = () => {
   return (
     <BrowserRouter>
-      <div className="flex min-h-screen">
+      <div className="flex h-screen">
         <Sidebar />
-        <main className="w-full grid grid-row-minmax bg-blue-50">
+        <main className="w-full grid grid-row-minmax bg-blue-50 overflow-y-auto overflow-x-hidden">
           <NavBar />
           <Suspense fallback={<Loader />}>
             <Routes>
