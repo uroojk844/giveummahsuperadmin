@@ -5,6 +5,8 @@ import Loader from "./components/Loader";
 import Sidebar from "./components/Sidebar";
 const HomePage = lazy(() => import("./pages/HomePage"));
 const DonationPage = lazy(() => import("./pages/DonationPage"));
+const RequestsPage = lazy(() => import("./pages/RequestsPage"));
+const UsersPage = lazy(() => import("./pages/UsersPage"));
 // const HomePage = lazy(() => import("./pages/HomePage"));
 
 const App = () => {
@@ -18,6 +20,8 @@ const App = () => {
             <Routes>
               <Route path="/" element={<HomePage />}></Route>
               <Route path="/donations" element={<DonationPage />}></Route>
+              <Route path="/requests" element={<RequestsPage />}></Route>
+              <Route path="/users" element={<UsersPage />}></Route>
             </Routes>
           </Suspense>
         </main>
