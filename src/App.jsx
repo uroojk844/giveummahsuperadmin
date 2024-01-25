@@ -12,7 +12,7 @@ const App = () => {
     <BrowserRouter>
       <div className="flex min-h-screen">
         <Sidebar />
-        <main className="grid grid-row-minmax bg-blue-100">
+        <main className="w-full grid grid-row-minmax bg-blue-50">
           <NavBar />
           <Suspense fallback={<Loader />}>
             <Routes>
