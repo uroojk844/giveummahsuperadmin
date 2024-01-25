@@ -5,6 +5,7 @@ import Loader from "./components/Loader";
 import Sidebar from "./components/Sidebar";
 const HomePage = lazy(() => import("./pages/HomePage"));
 const DonationPage = lazy(() => import("./pages/DonationPage"));
+const RequestsPage = lazy(() => import("./pages/RequestsPage"));
 // const HomePage = lazy(() => import("./pages/HomePage"));
 
 const App = () => {
@@ -12,12 +13,13 @@ const App = () => {
     <BrowserRouter>
       <div className="flex min-h-screen">
         <Sidebar />
-        <main className="grid grid-row-minmax bg-blue-100">
+        <main className="grid grid-row-minmax bg-blue-50">
           <NavBar />
           <Suspense fallback={<Loader />}>
             <Routes>
               <Route path="/" element={<HomePage />}></Route>
               <Route path="/donations" element={<DonationPage />}></Route>
+              <Route path="/requests" element={<RequestsPage />}></Route>
             </Routes>
           </Suspense>
         </main>
