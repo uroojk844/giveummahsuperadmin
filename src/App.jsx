@@ -3,6 +3,9 @@ import React, { Suspense, lazy } from "react";
 import NavBar from "./components/NavBar";
 import Loader from "./components/Loader";
 import Sidebar from "./components/Sidebar";
+import FeedbackPage from "./pages/FeedbackPage";
+import FeedBackDetailsPage from "./pages/FeedBackDetailsPage";
+import ActiveCampaignsPage from "./pages/ActiveCampaignsPage";
 const HomePage = lazy(() => import("./pages/HomePage"));
 const DonationPage = lazy(() => import("./pages/DonationPage"));
 const RequestsPage = lazy(() => import("./pages/RequestsPage"));
@@ -22,6 +25,9 @@ const App = () => {
               <Route path="/donations" element={<DonationPage />}></Route>
               <Route path="/requests" element={<RequestsPage />}></Route>
               <Route path="/users" element={<UsersPage />}></Route>
+              <Route path="/feedbacks" element={<FeedbackPage />}></Route>
+              <Route path="/feedback/:id" element={<FeedBackDetailsPage />}></Route>
+              <Route path="/campaigns" element={<ActiveCampaignsPage />}></Route>
             </Routes>
           </Suspense>
         </main>
