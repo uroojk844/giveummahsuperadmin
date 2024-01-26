@@ -1,55 +1,55 @@
 import React from "react";
 import { FaCheck, FaTimes } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { database } from "../utils/firebase";
+import { doc, updateDoc } from "firebase/firestore";
+import toast, { } from "react-hot-toast"
 
-const CampaignCard = ({ index }) => {
+const CampaignCard = ({ data, id, method }) => {
+  
+  function accept(postId) {
+    const campaignRef = doc(database, "campaigns", postId)
+    updateDoc(campaignRef, {
+      status:"Active"
+    })
+      .then(updated => {
+        toast.success("Campaign accepted")
+        method()
+      })
+    .catch(err=>console.log(err))
+  }
+
+  function reject(postId) {
+    const campaignRef = doc(database, "campaigns", postId)
+    updateDoc(campaignRef, {
+      status:"Rejected"
+    })
+      .then(updated => {
+        toast.error("Campaign rejected")
+        method()
+      })
+    .catch(err=>console.log(err))
+  }
   return (
     <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-transform">
       <img
-        src={`http://picsum.photos/450/500?${index}`}
+        src={data.campaignImage[0]}
         className="h-[260px] object-cover w-full"
         alt=""
       />
       <div className="p-4 space-y-3">
-        <div className="flex gap-3 items-center">
-          <img
-            src={`http://picsum.photos/450/500?${index}`}
-            className="w-6 h-6 object-cover rounded-full"
-            alt=""
-          />
-          <div className="text-xs">All Children in School</div>
-        </div>
         <div className="">
-          Clean Water Project For Children In Guinea & Change Their Lives
-          Forever
+         {data.campaignTitle}
         </div>
         <div className="grid grid-cols-2 gap-5 mt">
-          <button className="bg-green-500 text-white py-2 rounded-xl flex items-center justify-center gap-2">
+          <button onClick={()=>accept(id)} className="bg-green-500 text-white py-2 rounded-xl flex items-center justify-center gap-2">
             <FaCheck /> Accept
           </button>
-          <button className="bg-red-500 text-white py-2 rounded-xl flex items-center justify-center gap-2">
+          <button onClick={()=>reject(id)} className="bg-red-500 text-white py-2 rounded-xl flex items-center justify-center gap-2">
             <FaTimes />
             Reject
           </button>
         </div>
-        {/* <div className="flex gap-4">
-            <div className="flex items-center gap-1.5">
-              <i className="bi bi-clock text-[18px] text-gray-400"></i>
-              <div className="text-sm">140 days left</div>
-            </div>
-          </div>
-          <div className="w-full bg-gray-200 h-1">
-            <div className="w-40 h-1 primary"></div>
-          </div>
-          <div className="flex items-center">
-            <div>
-              <div className="font-semibold text-xl">₹ 120000</div>
-              <div className="text-sm text-gray-500">funded of ₹ 123000</div>
-            </div>
-            <button className="primary text-white py-2 px-4 text-sm font-semibold rounded-full ml-auto">
-              SUPPORT
-            </button>
-          </div> */}
       </div>
     </div>
   );
