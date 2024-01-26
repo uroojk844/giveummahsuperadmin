@@ -7,89 +7,198 @@ import {
   LinearScale,
   Tooltip,
   Legend,
-  ArcElement
+  ArcElement,
 } from "chart.js";
-import { Bar,Pie } from "react-chartjs-2";
+import { Bar, Pie } from "react-chartjs-2";
+import { useState } from "react";
 
-ChartJS.register(ArcElement,BarElement, CategoryScale, LinearScale, Tooltip, Legend);
+ChartJS.register(
+  ArcElement,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend
+);
 
 const HomePage = () => {
-  const chartData = {
-    labels: ["Mon", "Tue", "Wed","Thu","Fri","Sat","Sun"],
+  const weeklyData = {
+    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
     datasets: [
       {
         label: "Weekly data",
-        data: [13, 6, 9,1,2,11,1.5],
-        backgroundColor: "#3b81f6"
+        data: [13000, 6000, 9000, 1000, 22000, 1100, 15000],
+        backgroundColor: "#3b81f6",
       },
     ],
   };
-  const pieData = {
-    labels: ["Data1", "Data2"],
+
+  const monthlyData = {
+    labels: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
     datasets: [
       {
-        label: "Profit data",
-        data: [75, 25],
-        backgroundColor: "#3b81f6"
+        label: "Weekly data",
+        data: [
+          13000, 6000, 9000, 1000, 22000, 1100, 15000, 6000, 9000, 1000, 22000,
+          1100, 15000,
+        ],
+        backgroundColor: "#3b81f6",
       },
     ],
   };
-  const options={}
-  const stats = [
+
+  const yearlyData = {
+    labels: [2024, 2025, 2026, 2027, 2028, 2029, 2030],
+    datasets: [
+      {
+        label: "Weekly data",
+        data: [13000, 0, 0, 0, 0, 0, 0],
+        backgroundColor: "#3b81f6",
+      },
+    ],
+  };
+
+  const filters = {
+    weekly: weeklyData,
+    monthly: monthlyData,
+    yearly: yearlyData,
+  };
+
+  const [dataFilter, setDataFilter] = useState(weeklyData);
+
+  const options = {};
+
+  const amountStats = [
     {
       title: "Total amount recieved",
       value: Math.random(9999) * 100000,
+      data: dataFilter,
     },
     {
       title: "Total amount recieved",
       value: Math.random(9999) * 100000,
+      data: dataFilter,
     },
     {
       title: "Total amount for donation",
       value: Math.random(9999) * 100000,
+      data: dataFilter,
     },
+    {
+      labels: ["Donation", "Platforn tip"],
+      datasets: [
+        {
+          data: [75, 25],
+          backgroundColor: ["#3b81f6", "lightskyblue"],
+        },
+      ],
+    },
+  ];
+
+  const transactionStats = [
     {
       title: "Total transaction initiated",
       value: Math.random(9999) * 100000,
+      data: dataFilter,
     },
     {
       title: "Total successful transaction",
       value: Math.random(9999) * 100000,
+      data: dataFilter,
     },
     {
       title: "Total unsuccessful transaction",
       value: Math.random(9999) * 100000,
+      data: dataFilter,
+    },
+    {
+      labels: ["Successful", "Unsuccessful"],
+      datasets: [
+        {
+          data: [90, 10],
+          backgroundColor: ["#3b81f6", "lightskyblue"],
+        },
+      ],
     },
   ];
 
   return (
     <section className="px-6 py-2 space-y-6">
-      <div className="flex items-start gap-4">
-        <div className="grid max-sm:grid-cols-1 max-lg:grid-cols-2 grid-cols-3 gap-4">
-          {stats.map((data, index) => (
-            <div className="p-4 bg-white rounded-md" key={index}>
-              <div className="text-slate-500">{data.title}</div>
-              <div className="font-[600]">{INRFormat(data.value)}</div>
-              <div>
-                <Bar data={chartData} options={options} />
-              </div>
-            </div>
-          ))}
-        </div>
+      <div className={`flex bg-blue-100 p-2 gap-2 rounded-lg`}>
+        {Object.keys(filters).map((filter, index) => {
+          return (
+            <button
+              className={`px-4 py-1 rounded capitalize ${
+                JSON.stringify(filters[filter]) == JSON.stringify(dataFilter) &&
+                "bg-white text-blue-500"
+              }`}
+              onClick={() => setDataFilter(filters[filter])}
+              key={index}
+            >
+              {filter}
+            </button>
+          );
+        })}
       </div>
-      <div>
-        <div className="grid grid-cols-3 gap-4">
-          <div className="p-4 bg-white rounded-md">
-            <div className="text-slate-500"></div>
-            <div className="font-[600]">{INRFormat(7)} </div>
-            <Pie data={pieData} />
-          </div>
-          <div className="p-4 bg-white rounded-md">
-            <div className="text-slate-500"></div>
-            <div className="font-[600]">{INRFormat(7)}</div>
-            <Pie data={pieData} />
-          </div>
-        </div>
+
+      <div className="grid3">
+        {amountStats.map((data, index) => {
+          if (index > 2)
+            return (
+              <div className="p-4 bg-white rounded-md">
+                <Pie data={data} />
+              </div>
+            );
+
+          return (
+            <div
+              className="grid content-between p-4 bg-white rounded-md"
+              key={index}
+            >
+              <div className="space-y-4">
+                <div className="text-slate-500">{data.title}</div>
+                <div className="font-[600]">{INRFormat(data.value)}</div>
+              </div>
+              <Bar data={data.data} options={options} />
+            </div>
+          );
+        })}
+      </div>
+      <div className="grid3">
+        {transactionStats.map((data, index) => {
+          if (index > 2)
+            return (
+              <div className="p-4 bg-white rounded-md">
+                <Pie data={data} />
+              </div>
+            );
+
+          return (
+            <div
+              className="grid content-between p-4 bg-white rounded-md"
+              key={index}
+            >
+              <div className="space-y-4">
+                <div className="text-slate-500">{data.title}</div>
+                <div className="font-[600]">{INRFormat(data.value)}</div>
+              </div>
+              <Bar data={data.data} />
+            </div>
+          );
+        })}
       </div>
 
       <div className="bg-white p-4 rounded-md">
