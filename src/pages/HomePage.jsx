@@ -1,7 +1,40 @@
 import { INRFormat } from "../utils/rupees_format";
 import { IoMdTrendingUp } from "react-icons/io";
+import {
+  Chart as ChartJS,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+  ArcElement
+} from "chart.js";
+import { Bar,Pie } from "react-chartjs-2";
+
+ChartJS.register(ArcElement,BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 const HomePage = () => {
+  const chartData = {
+    labels: ["Mon", "Tue", "Wed","Thu","Fri","Sat","Sun"],
+    datasets: [
+      {
+        label: "Weekly data",
+        data: [13, 6, 9,1,2,11,1.5],
+        backgroundColor: "#3b81f6"
+      },
+    ],
+  };
+  const pieData = {
+    labels: ["Data1", "Data2"],
+    datasets: [
+      {
+        label: "Profit data",
+        data: [75, 25],
+        backgroundColor: "#3b81f6"
+      },
+    ],
+  };
+  const options={}
   const stats = [
     {
       title: "Total amount recieved",
@@ -37,19 +70,26 @@ const HomePage = () => {
             <div className="p-4 bg-white rounded-md" key={index}>
               <div className="text-slate-500">{data.title}</div>
               <div className="font-[600]">{INRFormat(data.value)}</div>
+              <div>
+                <Bar data={chartData} options={options} />
+              </div>
             </div>
           ))}
         </div>
-        <aside className="grid gap-4">
+      </div>
+      <div>
+        <div className="grid grid-cols-3 gap-4">
           <div className="p-4 bg-white rounded-md">
             <div className="text-slate-500"></div>
-            <div className="font-[600]">{INRFormat(7)}</div>
+            <div className="font-[600]">{INRFormat(7)} </div>
+            <Pie data={pieData} />
           </div>
           <div className="p-4 bg-white rounded-md">
             <div className="text-slate-500"></div>
             <div className="font-[600]">{INRFormat(7)}</div>
+            <Pie data={pieData} />
           </div>
-        </aside>
+        </div>
       </div>
 
       <div className="bg-white p-4 rounded-md">
