@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const FeedBackCard = ({index}) => {
   return (
-    <Link to={`/feedback/${index}`}>
+    <Link to={`/report/${index}`}>
       <div className="cursor-pointer flex gap-4 p-4 border-b text-sm hover:bg-gray-100">
         <div className="text-gray-500">12 Jan 2024</div>
         <div>

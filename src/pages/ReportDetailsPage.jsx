@@ -3,7 +3,7 @@ import React from 'react'
 const FeedBackDetailsPage = () => {
   return (
     <div className='p-5'>
-      <div className="text-xl font-bold mb-4">Feedback</div>
+      <div className="text-xl font-bold mb-4">Report</div>
       <div className='bg-white rounded-lg p-4'>
         <div className='text-gray-500'>12 Jan 2024</div>
         <div className='mt-3'>

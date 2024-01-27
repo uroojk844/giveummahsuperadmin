@@ -9,7 +9,7 @@
     grid-template-rows:max-content auto;
 }
 
-table {
+/* table {
     width: 100%;
     border: 1px solid #efefef;
     border-collapse: collapse;
@@ -40,7 +40,7 @@ tr :is(td,th):nth-child(2){
 tr :is(td):nth-child(2){
     color: blue;
     text-decoration: underline;
-}
+} */
 .glass {
     background: rgba(0, 0, 0, 0.5);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
