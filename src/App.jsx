@@ -3,10 +3,11 @@ import React, { Suspense, lazy, useState } from "react";
 import NavBar from "./components/NavBar";
 import Loader from "./components/Loader";
 import Sidebar from "./components/Sidebar";
-import FeedbackPage from "./pages/FeedbackPage";
-import FeedBackDetailsPage from "./pages/FeedBackDetailsPage";
-import ActiveCampaignsPage from "./pages/ActiveCampaignsPage";
+const ActiveCampaignsPage = lazy(()=>import("./pages/ActiveCampaignsPage"))
+const EditUserPage = lazy(()=>import("./pages/EditUserPage"));
 const HomePage = lazy(() => import("./pages/HomePage"));
+const ReportsPage = lazy(()=>import("./pages/ReportsPage"))
+const ReportDetailsPage = lazy(()=>import("./pages/ReportDetailsPage"))
 const DonationPage = lazy(() => import("./pages/DonationPage"));
 const RequestsPage = lazy(() => import("./pages/RequestsPage"));
 const UsersPage = lazy(() => import("./pages/UsersPage"));
@@ -29,6 +30,7 @@ const App = () => {
               <Route path="/donations" element={<DonationPage />}></Route>
               <Route path="/requests" element={<RequestsPage />}></Route>
               <Route path="/users" element={<UsersPage />}></Route>
+<<<<<<< HEAD
               <Route path="/feedbacks" element={<FeedbackPage />}></Route>
               <Route
                 path="/feedback/:id"
@@ -38,6 +40,12 @@ const App = () => {
                 path="/campaigns"
                 element={<ActiveCampaignsPage />}
               ></Route>
+=======
+              <Route path="/reports" element={<ReportsPage />}></Route>
+              <Route path="/report/:id" element={<ReportDetailsPage />}></Route>
+              <Route path="/campaigns" element={<ActiveCampaignsPage />}></Route>
+              <Route path="/edit/:id" element={<EditUserPage />}></Route>
+>>>>>>> 9c782e8087b3f5a418b261faee4bcab921130ebf
             </Routes>
           </Suspense>
         </main>
