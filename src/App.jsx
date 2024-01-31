@@ -30,22 +30,14 @@ const App = () => {
               <Route path="/donations" element={<DonationPage />}></Route>
               <Route path="/requests" element={<RequestsPage />}></Route>
               <Route path="/users" element={<UsersPage />}></Route>
-<<<<<<< HEAD
-              <Route path="/feedbacks" element={<FeedbackPage />}></Route>
-              <Route
-                path="/feedback/:id"
-                element={<FeedBackDetailsPage />}
-              ></Route>
               <Route
                 path="/campaigns"
                 element={<ActiveCampaignsPage />}
               ></Route>
-=======
               <Route path="/reports" element={<ReportsPage />}></Route>
               <Route path="/report/:id" element={<ReportDetailsPage />}></Route>
               <Route path="/campaigns" element={<ActiveCampaignsPage />}></Route>
               <Route path="/edit/:id" element={<EditUserPage />}></Route>
->>>>>>> 9c782e8087b3f5a418b261faee4bcab921130ebf
             </Routes>
           </Suspense>
         </main>

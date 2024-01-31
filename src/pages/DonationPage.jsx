@@ -2,6 +2,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { database } from "../utils/firebase";
 import { useEffect, useState } from "react";
 import Loader from "../components/Loader";
+import moment from "moment";
 
 const DonationPage = () => {
   const [donations, setDonations] = useState([]);
@@ -41,7 +42,7 @@ const DonationPage = () => {
                 return (
                   <tr>
                     <td className="">{item.data().name || "NA"}</td>
-                    <td className="text-black">{item.data().date}</td>
+                    <td className="text-black">{moment(item.data().date).format("DD-MM-YYYY")}</td>
                     <td>{item.data().amount}</td>
                     <td>{item.data().tip}</td>
                     <td>{item.data().email || "NA"}</td>

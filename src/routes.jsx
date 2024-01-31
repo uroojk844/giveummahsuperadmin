@@ -1,5 +1,5 @@
 import { lazy } from "react";
-import { MdCampaign, MdDashboard, MdFeedback, MdMessage, MdReport } from "react-icons/md";
+import { MdCampaign, MdDashboard, MdMessage, MdReport } from "react-icons/md";
 import { BiSolidDonateHeart } from "react-icons/bi";
 import { FaPowerOff, FaUsers } from "react-icons/fa";
 
@@ -33,12 +33,6 @@ export const PageRoutes = [
     title: "Accounts",
     element: lazy(() => import("./pages/UsersPage")),
     icon: <FaUsers size={24} />,
-  },
-  {
-    path: "/feedbacks",
-    title: "Feedbacks",
-    element: lazy(() => import("./pages/DonationPage")),
-    icon: <MdFeedback size={24} />,
   },
   {
     path: "/reports",
