@@ -1,24 +1,35 @@
-import React from 'react'
+import React, { useEffect,useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { database } from '../utils/firebase'
+import { getDoc,doc} from 'firebase/firestore'
+import Loader from '../components/Loader'
 
 const FeedBackDetailsPage = () => {
+  const { id } = useParams()
+  const [report, setReport] = useState({})
+  const [loading, setLoding] = useState(true)
+  
+  const reportRef = doc(database, "reports", id)
+  async function getReportData() {
+    const data = await getDoc(reportRef)
+    setReport(data.data())
+    setLoding(false)
+  }
+  useEffect(() => {
+      getReportData()
+  },[])
   return (
-    <div className='p-5'>
-      <div className="text-xl font-bold mb-4">Report</div>
-      <div className='bg-white rounded-lg p-4'>
-        <div className='text-gray-500'>12 Jan 2024</div>
-        <div className='mt-3'>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatibus corporis dolorem et veritatis fugiat, sint exercitationem, aliquam eveniet asperiores earum ipsum minima! Repellendus at porro odio ipsum temporibus eaque eligendi!
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatibus corporis dolorem et veritatis fugiat, sint exercitationem, aliquam eveniet asperiores earum ipsum minima! Repellendus at porro odio ipsum temporibus eaque eligendi!
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatibus corporis dolorem et veritatis fugiat, sint exercitationem, aliquam eveniet asperiores earum ipsum minima! Repellendus at porro odio ipsum temporibus eaque eligendi!
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatibus corporis dolorem et veritatis fugiat, sint exercitationem, aliquam eveniet asperiores earum ipsum minima! Repellendus at porro odio ipsum temporibus eaque eligendi!
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatibus corporis dolorem et veritatis fugiat, sint exercitationem, aliquam eveniet asperiores earum ipsum minima! Repellendus at porro odio ipsum temporibus eaque eligendi!
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatibus corporis dolorem et veritatis fugiat, sint exercitationem, aliquam eveniet asperiores earum ipsum minima! Repellendus at porro odio ipsum temporibus eaque eligendi!
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatibus corporis dolorem et veritatis fugiat, sint exercitationem, aliquam eveniet asperiores earum ipsum minima! Repellendus at porro odio ipsum temporibus eaque eligendi!
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptatibus corporis dolorem et veritatis fugiat, sint exercitationem, aliquam eveniet asperiores earum ipsum minima! Repellendus at porro odio ipsum temporibus eaque eligendi!
+    <>
+      {loading && <Loader/>}
+      <div className="p-5">
+        <div className="text-xl font-bold mb-4">Report</div>
+        <div className="bg-white rounded-lg p-4">
+          <div className="text-gray-500">{report.date}</div>
+          <div className="mt-3">{report.detail}</div>
         </div>
       </div>
-    </div>
-  )
+    </>
+  );
 }
 
 export default FeedBackDetailsPage
