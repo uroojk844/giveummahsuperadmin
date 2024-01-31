@@ -10,7 +10,12 @@ import {
   ArcElement,
 } from "chart.js";
 import { Bar, Pie } from "react-chartjs-2";
-import { useState } from "react";
+import { lazy, useEffect, useState } from "react";
+import { getWeeklyData } from "../utils/weekly_data";
+import { getMonthlyData } from "../utils/monthly_data";
+import { getYearlyData } from "../utils/yearly_data";
+import { getTrendingCampaigns } from "../utils/getTrendingCampaigns";
+import moment from "moment";
 
 ChartJS.register(
   ArcElement,
@@ -22,130 +27,133 @@ ChartJS.register(
 );
 
 const HomePage = () => {
-  const weeklyData = {
-    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+  const barPlaceholder = {
+    labels: [24, 25, 26, 27, 28, 29, 30],
     datasets: [
       {
         label: "Weekly data",
-        data: [13000, 6000, 9000, 1000, 22000, 1100, 15000],
-        backgroundColor: "#3b81f6",
+        data: [1000, 2000, 3000, 4000, 5000, 6000, 7000],
+        backgroundColor: "#ddd",
       },
     ],
   };
 
-  const monthlyData = {
-    labels: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ],
-    datasets: [
-      {
-        label: "Weekly data",
-        data: [
-          13000, 6000, 9000, 1000, 22000, 1100, 15000, 6000, 9000, 1000, 22000,
-          1100, 15000,
-        ],
-        backgroundColor: "#3b81f6",
-      },
-    ],
-  };
+  const [isLoading, setIsLoading] = useState(false);
 
-  const yearlyData = {
-    labels: [2024, 2025, 2026, 2027, 2028, 2029, 2030],
-    datasets: [
-      {
-        label: "Weekly data",
-        data: [13000, 0, 0, 0, 0, 0, 0],
-        backgroundColor: "#3b81f6",
-      },
-    ],
-  };
+  const [amountData, setAmountData] = useState({});
+
+  // amountData destructering
+  const { totalAmount, totalDonation, totalTip, donationPercent, tipPercent } =
+    amountData;
+
+  const [weeklySummary, setWeeklySummary] = useState(barPlaceholder);
 
   const filters = {
-    weekly: weeklyData,
-    monthly: monthlyData,
-    yearly: yearlyData,
+    weekly: weeklySummary,
+    monthly: weeklySummary,
+    yearly: weeklySummary,
   };
 
-  const [dataFilter, setDataFilter] = useState(weeklyData);
+  const [dataFilter, setDataFilter] = useState("weekly");
 
   const options = {};
+
+  const piePlaceholder = {
+    labels: ["Donation", "Tip"],
+    datasets: [
+      {
+        data: isLoading ? [75, 25] : [donationPercent, tipPercent],
+        backgroundColor: isLoading
+          ? ["#ddd", "#aaa"]
+          : ["#3b81f6", "lightskyblue"],
+      },
+    ],
+  };
 
   const amountStats = [
     {
       title: "Total amount recieved",
-      value: Math.random(9999) * 100000,
-      data: dataFilter,
-    },
-    {
-      title: "Total amount recieved",
-      value: Math.random(9999) * 100000,
-      data: dataFilter,
+      value: totalAmount,
+      data: filters[dataFilter].total ?? barPlaceholder,
     },
     {
       title: "Total amount for donation",
-      value: Math.random(9999) * 100000,
-      data: dataFilter,
+      value: totalDonation,
+      data: filters[dataFilter].donation ?? barPlaceholder,
     },
     {
-      labels: ["Donation", "Platforn tip"],
-      datasets: [
-        {
-          data: [75, 25],
-          backgroundColor: ["#3b81f6", "lightskyblue"],
-        },
-      ],
+      title: "Total amount for tip",
+      value: totalTip,
+      data: filters[dataFilter].tip ?? barPlaceholder,
     },
+    piePlaceholder,
   ];
 
-  const transactionStats = [
-    {
-      title: "Total transaction initiated",
-      value: Math.random(9999) * 100000,
-      data: dataFilter,
-    },
-    {
-      title: "Total successful transaction",
-      value: Math.random(9999) * 100000,
-      data: dataFilter,
-    },
-    {
-      title: "Total unsuccessful transaction",
-      value: Math.random(9999) * 100000,
-      data: dataFilter,
-    },
-    {
-      labels: ["Successful", "Unsuccessful"],
-      datasets: [
-        {
-          data: [90, 10],
-          backgroundColor: ["#3b81f6", "lightskyblue"],
-        },
-      ],
-    },
-  ];
+  // const transactionStats = [
+  //   {
+  //     title: "Total transaction initiated",
+  //     value: Math.random(9999) * 100000,
+  //     data: dataFilter,
+  //   },
+  //   {
+  //     title: "Total successful transaction",
+  //     value: Math.random(9999) * 100000,
+  //     data: dataFilter,
+  //   },
+  //   {
+  //     title: "Total unsuccessful transaction",
+  //     value: Math.random(9999) * 100000,
+  //     data: dataFilter,
+  //   },
+  //   {
+  //     labels: ["Successful", "Unsuccessful"],
+  //     datasets: [
+  //       {
+  //         data: [90, 10],
+  //         backgroundColor: ["#3b81f6", "lightskyblue"],
+  //       },
+  //     ],
+  //   },
+  // ];
+
+  function getData(filter) {
+    setIsLoading(true);
+    filter()
+      .then((data) => {
+        setAmountData(data);
+        setWeeklySummary(data.chartData);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
+
+  const dataFilterFuntions = {
+    weekly: getWeeklyData,
+    monthly: getMonthlyData,
+    yearly: getYearlyData,
+  };
+
+  useEffect(() => {
+    getData(dataFilterFuntions[dataFilter]);
+  }, [dataFilter]);
+
+  const [trendingData, setTrendingData] = useState(null);
+
+  useEffect(() => {
+    getTrendingCampaigns().then(setTrendingData);
+  }, []);
 
   return (
-    <section className="px-6 py-2 space-y-6">
-      <div className={`flex bg-blue-100 p-2 gap-2 rounded-lg`}>
-        {Object.keys(filters).map((filter, index) => {
+    <section className="px-2 py-2 space-y-6">
+      <div className="flex bg-blue-100 p-2 gap-2 rounded-lg">
+        {["weekly", "monthly", "yearly"].map((filter, index) => {
           return (
             <button
               className={`px-4 py-1 rounded capitalize ${
-                JSON.stringify(filters[filter]) == JSON.stringify(dataFilter) &&
-                "bg-white text-blue-500"
+                filter == dataFilter && "bg-white text-blue-500"
               }`}
-              onClick={() => setDataFilter(filters[filter])}
+              onClick={() => setDataFilter(filter)}
               key={index}
             >
               {filter}
@@ -158,7 +166,7 @@ const HomePage = () => {
         {amountStats.map((data, index) => {
           if (index > 2)
             return (
-              <div className="p-4 bg-white rounded-md">
+              <div className="p-4 bg-white rounded-md" key={index}>
                 <Pie data={data} />
               </div>
             );
@@ -177,60 +185,87 @@ const HomePage = () => {
           );
         })}
       </div>
-      <div className="grid3">
-        {transactionStats.map((data, index) => {
-          if (index > 2)
+      {/* <div className="grid3">
+        {amountData ? (
+          <h1>Loading</h1>
+        ) : (
+          transactionStats.map((data, index) => {
+            if (index > 2)
+              return (
+                <div className="p-4 bg-white rounded-md">
+                  <Pie data={data} />
+                </div>
+              );
+
             return (
-              <div className="p-4 bg-white rounded-md">
-                <Pie data={data} />
+              <div
+                className="grid content-between p-4 bg-white rounded-md"
+                key={index}
+              >
+                <div className="space-y-4">
+                  <div className="text-slate-500">{data.title}</div>
+                  <div className="font-[600]">{INRFormat(data.value)}</div>
+                </div>
+                <Bar data={data.data} />
               </div>
             );
+          })
+        )}
+      </div> */}
 
-          return (
-            <div
-              className="grid content-between p-4 bg-white rounded-md"
-              key={index}
-            >
-              <div className="space-y-4">
-                <div className="text-slate-500">{data.title}</div>
-                <div className="font-[600]">{INRFormat(data.value)}</div>
-              </div>
-              <Bar data={data.data} />
-            </div>
-          );
-        })}
-      </div>
-
-      <div className="bg-white p-4 rounded-md">
+      <div className="bg-white p-4 rounded-md overflow-hidden">
         <div className="flex items-center gap-4 text-xl text-slate-500 font-[600] mb-4">
           <IoMdTrendingUp size={24} /> Trending campaigns
         </div>
-        <div className="overflow-auto">
-          <table className="w-full">
-            <tr className="flex">
-              <th className="">S. No.</th>
-              <th className="">Fundraisers</th>
-              <th className="">Created on</th>
-              <th className="">Expired by</th>
-              <th className="">Raised amount</th>
-              <th className="">Goal amount</th>
-              <th className="">Tip amount</th>
-            </tr>
-            {"jkldfjklddfgdfh".split("").map((data, index) => (
-              <tr className="flex">
-                <td className="">{index + 1}</td>
-                <td className="">
-                  <a href="http://giveummah.com/yhdkuysefdsgjh" target="_blank">
-                    http://giveummah.com/yhdkuysefdsgjh
-                  </a>
-                </td>
-                <td className="">23-01-2024</td>
-                <td className="">23-03-2024</td>
-                <td className="">{INRFormat(74377)}</td>
-                <td className="">{INRFormat(100000)}</td>
-                <td className="">{INRFormat(17000)}</td>
+        <div className="overflow-auto w-[calc(100vw-48px)] lg:w-[calc(100vw-304px)]">
+          <table className="table whitespace-nowrap">
+            <thead>
+              <tr>
+                <th className="">S. No.</th>
+                <th className="">Fundraisers</th>
+                <th className="">Created on</th>
+                <th className="">Expired by</th>
+                <th className="">Raised amount</th>
+                <th className="">Goal amount</th>
+                <th className="">Tip amount</th>
               </tr>
-            ))}
+            </thead>
+            <tbody>
+              {!trendingData ? (
+                <tr>
+                  <td>Loading...</td>
+                </tr>
+              ) : (
+                trendingData?.map((data, index) => {
+                  const url = `https://give-umma.vercel.app/details/${data.id}`;
+                  const createdOn = moment(data.data().date).format(
+                    "DD-MM-YYYY"
+                  );
+                  const expiredBy = moment(data.data().date)
+                    .add(2, "month")
+                    .format("DD-MM-YYYY");
+
+                  const raisedAmount = data.data()?.raisedAmount ?? 0;
+                  const goalAmount = data.data()?.goalAmount ?? 0;
+                  const tipAmount = data.data()?.tipAmount ?? 0;
+                  return (
+                    <tr key={index}>
+                      <td className="">{index + 1}</td>
+                      <td className="">
+                        <a href={url} target="_blank">
+                          {url}
+                        </a>
+                      </td>
+                      <td className="">{createdOn}</td>
+                      <td className="">{expiredBy}</td>
+                      <td className="">{INRFormat(raisedAmount)}</td>
+                      <td className="">{INRFormat(goalAmount)}</td>
+                      <td className="">{INRFormat(tipAmount)}</td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
           </table>
         </div>
       </div>
