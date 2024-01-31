@@ -7,17 +7,17 @@ import ActiveCampaignCard from "../components/ActiveCampaignCard";
 
 const ActiveCampaignsPage = () => {
   const campaignsRef = collection(database, "campaigns");
+
   const [allCampaigns, setAllCampaigns] = useState([]);
   const [loading, setLoading] = useState(true);
-
   async function getCampaigns() {
     const q = query(campaignsRef, where("status", "==", "Active"));
     const data = await getDocs(q);
     setAllCampaigns(data.docs);
-      setLoading(false);
+    setLoading(false);
   }
   useEffect(() => {
-      getCampaigns()
+    getCampaigns();
   }, []);
   return (
     <>
@@ -32,7 +32,7 @@ const ActiveCampaignsPage = () => {
         )}
         <div className="grid grid-cols-3 gap-4">
           {allCampaigns.map((item, index) => {
-              return <ActiveCampaignCard data={item.data()} key={index} />;
+              return <ActiveCampaignCard data={item.data()} id={item.id} key={index} />;
           })}
         </div>
       </div>
