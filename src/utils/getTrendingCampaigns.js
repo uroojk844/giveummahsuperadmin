@@ -8,7 +8,7 @@ import {
 } from "firebase/firestore";
 import { database } from "./firebase";
 
-export const getTrendingCampaigns = () => {
+export const getTrendingCampaigns = async() => {
   const campaignsRef = collection(database, "campaigns");
   return getDocs(
     query(

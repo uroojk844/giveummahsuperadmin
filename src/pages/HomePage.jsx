@@ -16,6 +16,8 @@ import { getMonthlyData } from "../utils/monthly_data";
 import { getYearlyData } from "../utils/yearly_data";
 import { getTrendingCampaigns } from "../utils/getTrendingCampaigns";
 import moment from "moment";
+import { BsClockHistory } from "react-icons/bs";
+import { getRecentDonations } from "../utils/getRecentDonations";
 
 ChartJS.register(
   ArcElement,
@@ -139,9 +141,11 @@ const HomePage = () => {
   }, [dataFilter]);
 
   const [trendingData, setTrendingData] = useState(null);
-
+  const [recentDonations, setRecentDonations] = useState(null);
   useEffect(() => {
     getTrendingCampaigns().then(setTrendingData);
+    getRecentDonations().then(setRecentDonations);
+    // console.log(recentDonations);
   }, []);
 
   return (
@@ -225,9 +229,10 @@ const HomePage = () => {
                 <th className="">Fundraisers</th>
                 <th className="">Created on</th>
                 <th className="">Expired by</th>
-                <th className="">Raised amount</th>
                 <th className="">Goal amount</th>
+                <th className="">Raised amount</th>
                 <th className="">Tip amount</th>
+                <th className="">Total collection</th>
               </tr>
             </thead>
             <tbody>
@@ -247,7 +252,7 @@ const HomePage = () => {
 
                   const raisedAmount = data.data()?.raisedAmount ?? 0;
                   const goalAmount = data.data()?.goalAmount ?? 0;
-                  const tipAmount = data.data()?.tipAmount ?? 0;
+                  const tipAmount = data.data()?.totalTip ?? 0;
                   return (
                     <tr key={index}>
                       <td className="">{index + 1}</td>
@@ -258,9 +263,57 @@ const HomePage = () => {
                       </td>
                       <td className="">{createdOn}</td>
                       <td className="">{expiredBy}</td>
-                      <td className="">{INRFormat(raisedAmount)}</td>
                       <td className="">{INRFormat(goalAmount)}</td>
+                      <td className="">{INRFormat(raisedAmount)}</td>
                       <td className="">{INRFormat(tipAmount)}</td>
+                      <td className="">
+                        {INRFormat(raisedAmount + tipAmount)}
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div className="bg-white p-4 rounded-md overflow-hidden">
+        <div className="flex items-center gap-4 text-xl text-slate-500 font-[600] mb-4">
+          <BsClockHistory size={24} /> Recent donations
+        </div>
+        <div className="overflow-auto w-[calc(100vw-48px)] lg:w-[calc(100vw-304px)]">
+          <table className="table whitespace-nowrap">
+            <thead>
+              <tr>
+                <th className="">S. No.</th>
+                <th className="">Name</th>
+                <th className="">Amount</th>
+                <th className="">Tip</th>
+                <th className="">Email</th>
+                <th className="">Mobile</th>
+              </tr>
+            </thead>
+            <tbody>
+              {!recentDonations ? (
+                <tr>
+                  <td>Loading...</td>
+                </tr>
+              ) : (
+                recentDonations?.map((data, index) => {
+                  const name = data.data()?.name ?? 0;
+                  const amount = data.data()?.amount ?? 0;
+                  const tip = data.data()?.tip ?? 0;
+                  const email = data.data()?.email ?? 0;
+                  const mobile = data.data()?.mobile ?? 0;
+                  return (
+                    <tr key={index}>
+                      <td className="">{index + 1}</td>
+                      <td className="">{name}</td>
+                      <td className="">{INRFormat(amount)}</td>
+                      <td className="">{INRFormat(tip)}</td>
+                      <td className="">{email}</td>
+                      <td className="">{mobile}</td>
+                      
                     </tr>
                   );
                 })

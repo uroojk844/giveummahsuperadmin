@@ -18,7 +18,10 @@ const ActiveCampaignCard = ({ data, id }) => {
   }, []);
   return (
     <Link to="">
-      <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-transform">
+      <div className="bg-white relative rounded-xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-transform">
+        <div className="absolute bg-gray-500 text-white rounded-full px-2.5 text-sm py-1 top-2 left-2">
+          {data.status}
+        </div>
         <img
           src={data.campaignImage[0]}
           className="h-[260px] object-cover w-full"

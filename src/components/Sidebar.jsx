@@ -11,7 +11,7 @@ const Sidebar = ({ sidebarState }) => {
         sidebarState && "max-lg:-translate-x-full"
       } z-10 transition-transform max-lg:shadow-lg fixed bg-white h-full grid w-64 grid-row-minmax p-6`}
     >
-      <div className="text-2xl uppercase font-bold mb-8 cb">GiveUmmah</div>
+      <div className="text-2xl uppercase font-bold mb-8 cb">GiveUmma</div>
       <div className="grid content-start gap-6">
         {PageRoutes.map((page, index) => (
           <Link
