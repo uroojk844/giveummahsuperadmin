@@ -19,8 +19,19 @@ const ActiveCampaignCard = ({ data, id }) => {
   return (
     <Link to="">
       <div className="bg-white relative rounded-xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-transform">
-        <div className="absolute bg-gray-500 text-white rounded-full px-2.5 text-sm py-1 top-2 left-2">
-          {data.status}
+        <div className="flex absolute gap-2 top-2 left-2">
+          <div
+            className={`${data.status == "Active" && "bg-green-500"} ${
+              data.status == "Pending" && "bg-yellow-500"
+            } ${
+              data.status == "Rejected" && "bg-red-500"
+            } text-white rounded-full px-2.5 text-sm py-1`}
+          >
+            {data.status}
+          </div>
+          <div className="bg-gray-500 text-white rounded-full px-2.5 text-sm py-1 capitalize">
+            {data.benificiaryType}
+          </div>
         </div>
         <img
           src={data.campaignImage[0]}
