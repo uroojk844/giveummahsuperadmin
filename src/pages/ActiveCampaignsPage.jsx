@@ -88,6 +88,7 @@ const ActiveCampaignsPage = () => {
           {menuOptions.map((item, index) => {
             return (
               <div
+                key={index}
                 className={`cursor-pointer hover:bg-black hover:text-white border border-black rounded-full px-4 py-1 ${
                   curr == item.text && "bg-black text-white"
                 }`}

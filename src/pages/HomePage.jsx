@@ -16,8 +16,9 @@ import { getMonthlyData } from "../utils/monthly_data";
 import { getYearlyData } from "../utils/yearly_data";
 import { getTrendingCampaigns } from "../utils/getTrendingCampaigns";
 import moment from "moment";
-import { BsClockHistory } from "react-icons/bs";
+import { BsArrowRight, BsClockHistory } from "react-icons/bs";
 import { getRecentDonations } from "../utils/getRecentDonations";
+import { Link } from "react-router-dom";
 
 ChartJS.register(
   ArcElement,
@@ -165,7 +166,6 @@ const HomePage = () => {
           );
         })}
       </div>
-
       <div className="grid3">
         {amountStats.map((data, index) => {
           if (index > 2)
@@ -216,7 +216,6 @@ const HomePage = () => {
           })
         )}
       </div> */}
-
       <div className="bg-white p-4 rounded-md overflow-hidden">
         <div className="flex items-center gap-4 text-xl text-slate-500 font-[600] mb-4">
           <IoMdTrendingUp size={24} /> Trending campaigns
@@ -277,6 +276,11 @@ const HomePage = () => {
           </table>
         </div>
       </div>
+      <Link to="/all-campaigns">
+        <button className="primary mt-4 px-5 py-2 rounded-full flex items-center gap-2">
+          View all <BsArrowRight />{" "}
+        </button>
+      </Link>
       <div className="bg-white p-4 rounded-md overflow-hidden">
         <div className="flex items-center gap-4 text-xl text-slate-500 font-[600] mb-4">
           <BsClockHistory size={24} /> Recent donations
@@ -313,7 +317,6 @@ const HomePage = () => {
                       <td className="">{INRFormat(tip)}</td>
                       <td className="">{email}</td>
                       <td className="">{mobile}</td>
-                      
                     </tr>
                   );
                 })

@@ -5,9 +5,17 @@ import { getDoc, doc } from "firebase/firestore";
 import Loader from "../components/Loader";
 
 const FeedBackDetailsPage = () => {
-  const { id } = useParams();
+  const { id, campaign } = useParams();
   const [report, setReport] = useState({});
+  const [camp, setCampaign] = useState({});
   const [loading, setLoding] = useState(true);
+
+  async function getCampaignData() {
+    const ref = doc(database, "campaigns", campaign);
+    const data = await getDoc(ref);
+    console.log(data.data());
+    setCampaign(data.data());
+  }
 
   const reportRef = doc(database, "reports", id);
   async function getReportData() {
@@ -18,6 +26,7 @@ const FeedBackDetailsPage = () => {
   }
   useEffect(() => {
     getReportData();
+    getCampaignData();
   }, []);
   return (
     <>
@@ -27,12 +36,22 @@ const FeedBackDetailsPage = () => {
         <div className="bg-white rounded-lg p-4">
           <div className="text-gray-500">{report.date}</div>
           <div className="mt-3">{report.detail}</div>
-          <div className="mt-3">
+          <div className="mt-5">
             <a
               href={`https://give-umma.vercel.app/details/${report.campaignId}`}
               target="blank"
             >
-              <button className="primary px-3 py-1 rounded">Visit campaign</button>
+              <div className="flex gap-2 bg-blue-100 rounded p-3">
+                <img
+                  src={camp.campaignImage}
+                  className="size-36 object-cover"
+                  alt=""
+                />
+                <div className="w-[720px] ">
+                  <div className="text-lg font-bold">{camp?.campaignTitle}</div>
+                  <div>{camp?.story?.substring(0, 300) + "..."}</div>
+                </div>
+              </div>
             </a>
           </div>
         </div>

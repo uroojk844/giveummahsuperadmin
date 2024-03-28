@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { MdCampaign, MdDashboard, MdMessage, MdReport } from "react-icons/md";
-import { BiSolidDonateHeart } from "react-icons/bi";
+import { BiMoneyWithdraw, BiSolidDonateHeart } from "react-icons/bi";
 import { FaPowerOff, FaUsers } from "react-icons/fa";
 
 export const PageRoutes = [
@@ -24,9 +24,9 @@ export const PageRoutes = [
   },
   {
     path: "/requests",
-    title: "Requests",
+    title: "Withdrawl requests",
     element: lazy(() => import("./pages/DonationPage")),
-    icon: <MdMessage size={24} />,
+    icon: <BiMoneyWithdraw size={24} />,
   },
   {
     path: "/users",
